@@ -1,154 +1,197 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap");
+﻿@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,700,800');
 
 * {
     box-sizing: border-box;
-    padding: 0;
     margin: 0;
 }
 
-body {
-    background: #457fb4;
-    font-family: "Roboto", sans-serif;
-    display: flex;
-    height: 100vh;
+html, body {
+    margin: 0;
+    background: white;
+    font-family: 'Montserrat', helvetica, arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
 }
 
-.hero-container {
-    margin: auto;
-    display: flex;
+.link {
+    display: block;
+    text-align: center;
+    color: #777;
+    text-decoration: none;
+    padding: 10px;
 }
 
-.main-container {
-    width: 270px;
-    height: 540px;
+.movie_card {
     position: relative;
-    margin: 0 20px;
+    display: block;
+    width: 800px;
+    height: 350px;
+    margin: 80px auto;
+    overflow: hidden;
+    border-radius: 10px;
+    transition: all 0.4s;
+    box-shadow: 0px 0px 120px -25px rgba(0,0,0, 0.5);
+    &:hover
+
+{
+    transform: scale(1.02);
+    box-shadow: 0px 0px 80px -25px rgba(0,0,0, 0.5);
+    transition: all 0.4s;
 }
 
-.poster-container {
-    width: 230px;
+.info_section {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-blend-mode: multiply;
+    z-index: 2;
+    border-radius: 10px;
+    .movie_header
+
+{
+    position: relative;
+    padding: 25px;
+    height: 40%;
+    h1
+
+{
+    color: black;
+    font-weight: 400;
+}
+
+h4 {
+    color: #555;
+    font-weight: 400;
+}
+
+.minutes {
+    display: inline-block;
+    margin-top: 15px;
+    color: #555;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.type {
+    display: inline-block;
+    color: #959595;
+    margin-left: 10px;
+}
+
+.locandina {
+    position: relative;
+    float: left;
+    margin-right: 20px;
+    height: 120px;
+    box-shadow: 0 0 20px -10px rgba(0,0,0,0.5);
+}
+
+}
+
+.movie_desc {
+    padding: 25px;
+    height: 50%;
+    .text
+
+{
+    color: #545454;
+}
+
+}
+
+.movie_social {
+    height: 10%;
+    padding-left: 15px;
+    padding-bottom: 20px;
+    ul
+
+{
+    list-style: none;
+    padding: 0;
+    li
+
+{
+    display: inline-block;
+    color: rgba(0,0,0,0.3);
+    transition: color 0.3s;
+    transition-delay: 0.15s;
+    margin: 0 10px;
+    &:hover
+
+{
+    transition: color 0.3s;
+    color: rgba(0,0,0,0.7);
+}
+
+i {
+    font-size: 19px;
+    cursor: pointer;
+}
+
+}
+}
+}
+}
+
+.blur_back {
     position: absolute;
     top: 0;
-    left: 20px;
-    z-index: 9999;
+    z-index: 1;
+    height: 100%;
+    right: 0;
+    background-size: cover;
+    border-radius: 11px;
 }
 
-.poster {
-    width: 100%;
-    box-shadow: 0 5px 20px 3px rgba(0, 0, 0, 0.6);
 }
 
-.ticket-container {
-    background: #fff;
-    width: 270px;
-    height: 520px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 5px;
-    position: absolute;
-    top: 20px;
-    box-shadow: 0 5px 20px 3px rgba(0, 0, 0, 0.6);
-    opacity: 0;
-}
-
-.main-container:hover .ticket-container {
-    opacity: 1;
-    animation: bounceIn 0.6s linear;
-}
-
-@keyframes bounceIn {
-    0%, 20%, 40%, 60%, 80%, to {
-        -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
-        animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+@media screen and (min-width: 768px) {
+    .movie_header {
+        width: 65%;
     }
 
-    0% {
-        opacity: 0;
-        -webkit-transform: scale3d(0.3, 0.3, 0.3);
-        transform: scale3d(0.3, 0.3, 0.3);
+    .movie_desc {
+        width: 50%;
     }
 
-    20% {
-        -webkit-transform: scale3d(1.03, 1.03, 1.03);
-        transform: scale3d(1.03, 1.03, 1.03);
+    .info_section {
+        background: linear-gradient(to right, #e5e6e6 50%, transparent 100%);
     }
 
-    40% {
-        -webkit-transform: scale3d(0.9, 0.9, 0.9);
-        transform: scale3d(0.9, 0.9, 0.9);
-    }
-
-    60% {
-        opacity: 1;
-        -webkit-transform: scale3d(1.01, 1.01, 1.01);
-        transform: scale3d(1.01, 1.01, 1.01);
-    }
-
-    80% {
-        -webkit-transform: scale3d(0.97, 0.97, 0.97);
-        transform: scale3d(0.97, 0.97, 0.97);
-    }
-
-    to {
-        opacity: 1;
-        -webkit-transform: scaleX(1);
-        transform: scaleX(1);
+    .blur_back {
+        width: 80%;
+        background-position: -100% 10% !important;
     }
 }
 
-/* @keyframes bounce {
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
+@media screen and (max-width: 768px) {
+    .movie_card {
+        width: 95%;
+        margin: 70px auto;
+        min-height: 350px;
+        height: auto;
+    }
 
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-} */
+    .blur_back {
+        width: 100%;
+        background-position: 50% 50% !important;
+    }
 
-.ticket__content {
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    text-align: center;
+    .movie_header {
+        width: 100%;
+        margin-top: 85px;
+    }
+
+    .movie_desc {
+        width: 100%;
+    }
+
+    .info_section {
+        background: linear-gradient(to top, #e5e6e6 50%, transparent 100%);
+        display: inline-grid;
+    }
 }
-
-.ticket__movie-title {
-    text-transform: uppercase;
-    margin-bottom: 5px;
-}
-
-.ticket__movie-slogan {
-    color: #999;
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-}
-
-.ticket__current-price {
-    color: #69c982;
-    font-size: 1.4rem;
-    font-weight: bold;
-}
-
-.ticket__old-price {
-    color: #999;
-    text-decoration: line-through;
-    margin-bottom: 10px;
-}
-
-.ticket__buy-btn {
-    cursor: pointer;
-    width: 100%;
-    background: #2f2f2f;
-    color: white;
-    padding: 15px 0;
-    font-size: 1rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    border: 0;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+.ave_back {
+    background: url("https://i.pinimg.com/736x/9e/17/61/9e1761ceb91fdf7460bc4d66f0681f62.jpg");
 }

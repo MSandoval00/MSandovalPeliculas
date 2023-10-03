@@ -5,47 +5,55 @@
 @{
 }
 <link href="~/css/cards.css" rel="stylesheet" />
-<br /> <br />
+<br />
+<br />
 <div class="text-center">
     @*<h2>GetAll</h2>*@
-    <h1 style="color:lemonchiffon;">Movies</h1>
+    <h1>Movies</h1>
 </div>
 <hr />
-@if(Model.results != null)
-		{
-<div class="container">
-	<div class="row">
-			@foreach(Movie movie in Model.results)
-			{
-			<div class="hero-container">
-		<div class="main-container">
-			<div class="poster-container">
-				<a href="#"><img src="https://i.ibb.co/ThPNnzM/blade-runner.jpg" class="poster" /></a>
-			</div>
-			<div class="ticket-container">
-				<div class="ticket__content">
-					<h4 class="ticket__movie-title">@movie.title</h4>
-					<p class="ticket__movie-slogan">
-						More human than human is our motto.
-					</p>
-					<p class="ticket__current-price">$28.00</p>
-					<p class="ticket__old-price">$44.99</p>
-					<button class="ticket__buy-btn">Buy now</button>
-				</div>
-			</div>
-		</div>
 
-	</div>	
-			}
+@if (Model.results != null)
+{
+    <div class="container">
+        <div class="row">
+
+            <a class="link" href="https://codepen.io/simoberny/pen/qxxOqj" target="_blank">Dark Version</a>
+            @foreach (Movie root in Model.results)
+            {
+                <div class="movie_card" id="ave">
+                    <div class="info_section">
+                        <div class="movie_header">
+                            <img class="locandina" src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/@root.backdrop_path" />
+                            <h5>@root.title</h5>
+                            <p class="text align-content-md-stretch">
+                                @root.overview
+                            </p>
+                            <h4>Popularity: @root.popularity</h4>
+                                        <span class="minutes">@root.release_date</span>
+                                        <p class="type">@root.original_title</p>
+                           
+                        </div>
+                        <div class="movie_desc">
+                            <div class=container>
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="blur_back ave_back"></div>
+                </div>
+            }
+
+        </div>
     </div>
-</div>
-
-		}
-		else
-		{
-			<div class="alert alert-danger" role="alert">
-				No se encontraron peliculas
-			 </div>
-		}
-		
-	
+}
+else
+{
+    <h1>No hay películas por mostrar</h1>
+}

@@ -12,8 +12,8 @@ namespace PL.Controllers
             root.results = new List<Models.Movie>();
             using (var client =new HttpClient())
             {
-                client.BaseAddress = new Uri("https://api.themoviedb.org/3/movie/popular?");
-                var responseTask = client.GetAsync("api_key=31e541d91f4612df7a43bcaf3cfe4be3");
+                client.BaseAddress = new Uri("https://api.themoviedb.org/3/movie/popular");
+                var responseTask = client.GetAsync("?api_key=31e541d91f4612df7a43bcaf3cfe4be3");
                 responseTask.Wait();
 
                 var resultService=responseTask.Result;
@@ -23,8 +23,8 @@ namespace PL.Controllers
                     readTask.Wait();
                     foreach (var resultMovie in readTask.Result.results)
                     {
-                        Models.Movie resultItemList = Newtonsoft.Json.JsonConvert.DeserializeObject<Models.Movie>(resultMovie.ToString());
-                        root.results.Add(resultItemList);
+                        root.results.Add(resultMovie);
+                        //root.results.Add(resultItemList);
                     }
                 }
 
