@@ -1,0 +1,51 @@
+﻿@model Root
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<link href="~/css/cards.css" rel="stylesheet" />
+<br /> <br />
+<div class="text-center">
+    @*<h2>GetAll</h2>*@
+    <h1 style="color:lemonchiffon;">Movies</h1>
+</div>
+<hr />
+@if(Model.results != null)
+		{
+<div class="container">
+	<div class="row">
+			@foreach(Movie movie in Model.results)
+			{
+			<div class="hero-container">
+		<div class="main-container">
+			<div class="poster-container">
+				<a href="#"><img src="https://i.ibb.co/ThPNnzM/blade-runner.jpg" class="poster" /></a>
+			</div>
+			<div class="ticket-container">
+				<div class="ticket__content">
+					<h4 class="ticket__movie-title">@movie.title</h4>
+					<p class="ticket__movie-slogan">
+						More human than human is our motto.
+					</p>
+					<p class="ticket__current-price">$28.00</p>
+					<p class="ticket__old-price">$44.99</p>
+					<button class="ticket__buy-btn">Buy now</button>
+				</div>
+			</div>
+		</div>
+
+	</div>	
+			}
+    </div>
+</div>
+
+		}
+		else
+		{
+			<div class="alert alert-danger" role="alert">
+				No se encontraron peliculas
+			 </div>
+		}
+		
+	
