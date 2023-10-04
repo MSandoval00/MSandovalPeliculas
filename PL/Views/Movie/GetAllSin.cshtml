@@ -1,0 +1,84 @@
+﻿@model MovieS
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<link href="~/css/cards.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+<br />
+<br />
+<div class="text-center">
+    @*<h2>GetAll</h2>*@
+    <h1>Movies</h1>
+    <a class="btn btn-primary" href="@Url.Action("GetAllFavorite","Movie")">Favoritos</a>
+</div>
+<hr />
+
+@if (Model.Movies.Count >0)
+{
+    <div class="container">
+        <div class="row">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="@Url.Action("GetAllSin","Movie", new{page=ViewBag.page-1})" tabindex="-1" aria-disabled="true">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="@Url.Action("GetAllSin","Movie", new{page=1})">1</a></li>
+                    <li class="page-item"><a class="page-link" href="@Url.Action("GetAllSin","Movie", new{page=2})">2</a></li>
+                    <li class="page-item"><a class="page-link" href="@Url.Action("GetAllSin","Movie", new{page=3})">3</a></li>
+                    <li class="page-item"><a class="page-link" href="@Url.Action("GetAllSin","Movie", new{page=ViewBag.page+1})">Next</a></li>
+                </ul>
+            </nav>
+            @*<a class="link" href="https://codepen.io/simoberny/pen/qxxOqj" target="_blank">Dark Version</a>*@
+            @foreach (MovieS movie in Model.Movies)
+            {
+                <div class="movie_card" id="ave">
+                    <div class="info_section">
+                        <div class="movie_header">
+                            <img class="locandina" src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/@movie.backdrop_path" />
+                            <h5>@movie.title</h5>
+                            <a class="btn btn-danger" href="@Url.Action("AddFavorite","Movie", new{IdMovie=movie.id,Favorite = true})">Agregar a Favorito</a>
+                            <p class="text align-content-md-stretch limited-text">
+                                @movie.overview
+                            </p>
+                            <h4>Popularity: @movie.popularity</h4>
+                            <span class="minutes">@movie.release_date</span>
+                            <p class="type">@movie.original_title </p>
+
+                        </div>
+                        <div class="movie_desc">
+                            <div class=container>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="blur_back ave_back"></div>
+                </div>
+            }
+
+        </div>
+    </div>
+}
+else
+{
+    <h1>No hay películas por mostrar</h1>
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+@section Scripts
+{
+    <script type="text/javascript">
+    var elementos= document.getElementByClassName("limited-text");
+    for(var=0; if<elementos.length;i++){
+        var elemento=elementos[1];
+        var text=elemento.innerText;
+        if(text.length>120){
+            var truncatedText=text.substring(0,1000)+ "...";
+            elemento.innerText=truncatedText;
+        }
+    }
+    </script>
+}

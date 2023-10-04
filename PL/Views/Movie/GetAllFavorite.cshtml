@@ -1,4 +1,4 @@
-﻿@model Root
+﻿@model MovieS
 @*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
@@ -9,30 +9,30 @@
 <br />
 <div class="text-center">
     @*<h2>GetAll</h2>*@
-    <h1>Movies</h1>
+    <h1>Movies Favorite</h1>
 </div>
 <hr />
 
-@if (Model.results != null)
+@if (Model.Movies != null)
 {
     <div class="container">
         <div class="row">
 
-            <a class="link" href="https://codepen.io/simoberny/pen/qxxOqj" target="_blank">Dark Version</a>
-            @foreach (Movie root in Model.results)
+            @*<a class="link" href="https://codepen.io/simoberny/pen/qxxOqj" target="_blank">Dark Version</a>*@
+            @foreach (MovieS movie in Model.Movies)
             {
                 <div class="movie_card" id="ave">
                     <div class="info_section">
                         <div class="movie_header">
-                            <img class="locandina" src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/@root.backdrop_path" />
-                            <h5>@root.title</h5>
-                            <a class="btn btn-danger" href="@Url.Action("Form","Alumno")">Favorito</a>
+                            <img class="locandina" src="https://www.themoviedb.org/t/p/w300_and_h450_bestv2/@movie.backdrop_path" />
+                            <h5>@movie.title</h5>
+                            <a class="btn btn-warning" href="@Url.Action("AddFavorite","Movie", new{IdMovie=movie.id,Favorite = false})">Quitar Favorito</a>
                             <p class="text align-content-md-stretch">
-                                @root.overview
+                                @movie.overview
                             </p>
-                            <h4>Popularity: @root.popularity</h4>
-                                        <span class="minutes">@root.release_date</span>
-                                        <p class="type">@root.original_title </p>
+                            <h4>Popularity: @movie.popularity</h4>
+                                        <span class="minutes">@movie.release_date</span>
+                                        <p class="type">@movie.original_title </p>
                                       
                         </div>
                         <div class="movie_desc">
@@ -56,5 +56,5 @@
 }
 else
 {
-    <h1>No hay películas por mostrar</h1>
+    <h1>No hay películas favoritas por mostrar</h1>
 }
