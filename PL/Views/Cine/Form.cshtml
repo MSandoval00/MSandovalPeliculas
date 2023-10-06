@@ -1,0 +1,129 @@
+﻿@model ML.Cine
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<style>
+    #map {
+        height: 300px;
+    }
+</style>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+@*
+    <!-- prettier-ignore -->
+    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+    ({key: "AIzaSyCSKBDdPPlfca_zTwyxKiicRQn1qfgRjLw", v: "beta"});</script>*@
+<script>
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      key: "AIzaSyCSKBDdPPlfca_zTwyxKiicRQn1qfgRjLw",
+      // Add other bootstrap parameters as needed, using camel case.
+      // Use the 'v' parameter to indicate the version to load (alpha, beta, weekly, etc.)
+    });
+</script>
+
+<div class="container">
+    @using (Html.BeginForm("Form", "Movie", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+
+            @Html.HiddenFor(Model=>Model.IdCine)
+            <div class="col-md-3">
+                @Html.LabelFor(model=>Model.Nombre)
+                @Html.TextBoxFor(model=>Model.Nombre, new {@class="form-control"})
+            </div>
+            <div class="col-md-3">
+                @Html.LabelFor(model=> Model.Zona.IdZona)
+                @Html.DropDownListFor(model=>Model.Zona.IdZona, new SelectList(Model.Cines, "IdZona","Nombre"), "Selecciona una zona",new {@class="form-control"})
+            </div>
+            <div class="col-md-3">
+                @Html.LabelFor(model=>Model.Ventas)
+                @Html.TextBoxFor(model=>Model.Ventas, new {@class="form-control"})
+            </div>
+
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-8">
+                @Html.LabelFor(model=>Model.Direccion)
+                <fieldset disabled>
+                    @Html.TextBoxFor(model=>Model.Direccion, new {@class="form-control" , @id="txtDireccion"})
+                </fieldset>
+            </div>
+            <div class="col-md-3">
+                <input type="submit" class="btn btn-success" value="Guardar">
+                <a href="@Url.Action("GetAll","Cine")" class="btn btn-danger">Cancelar</a>
+            </div>
+        </div>
+        <hr />
+        <hr />
+        <div id="map"></div>
+
+    }
+</div>
+
+@section Scripts
+{
+<script type="text/javascript">
+          // Initialize and add the map
+      let map;
+      let marker
+
+      async function initMap() {
+        // The location of Uluru
+        const position = {  lat:19.4303622, lng:-99.1616508  };
+        // Request needed libraries.
+        const { Map } = await google.maps.importLibrary("maps");
+       const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
+
+        // The map, centered at Uluru
+        map = new Map(document.getElementById("map"), {
+          zoom: 15,
+          center: position,
+          mapId: "DEMO_MAP_ID",
+        });
+        // The marker, positioned at Uluru
+    //let marker = new google.maps.Marker({
+    //  map: map,
+    //  position: position,
+    //});
+
+        let infoWindow=new google.maps.InfoWindow({
+            content: "Presiona la localización",
+            position: position,
+        });
+
+        infoWindow.open(map)
+
+        
+
+        //Obtener dirección
+
+        google.maps.event.addListener(map ,'click', function(event){
+            if (marker){
+                marker.setMap(null);
+            }
+            marker = new google.maps.Marker({
+                map: map,
+                position: event.latLng,
+            });
+            var geocoder=new google.maps.Geocoder();
+            geocoder.geocode({
+                'latLng':event.latLng
+            }, function (results, status){
+                if(status==google.maps.GeocoderStatus.OK){
+                    if(results[0]){
+                        $("#txtDireccion").val(results[0].formatted_address);
+
+                    }
+                }
+
+            });
+        });
+
+
+      }
+
+      initMap();
+</script>
+}

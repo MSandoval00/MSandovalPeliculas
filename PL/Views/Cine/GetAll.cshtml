@@ -1,0 +1,61 @@
+﻿@model ML.Cine
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="container">
+    <div class="row">
+        <h2>Cines</h2>
+        <div class="col-md-3">
+            <a class="btn btn-success" href="@Url.Action("Form","Cine")">Agregar</a>
+            <br />
+        </div>
+        <hr />
+
+    </div>
+</div>
+@if (Model.Cines.Count > 0)
+{
+    <div class="container">
+        <div class="row">
+            <table class="table table-bordered table-responsive">
+                <thead>
+                    <tr>
+                        @* <td>Id Cine</td>*@
+                        <td>Nombre Cine</td>
+                        <td>Dirección</td>
+                        <td>Zona</td>
+                        <td>Ventas</td>
+                        <td>Eliminar</td>
+
+                    </tr>
+                </thead>
+                @foreach (ML.Cine cine in Model.Cines)
+                {
+                    <tbody>
+                        <tr>
+                            <td class="col-md-2">@cine.Nombre</td>
+                            <td class="col-md-2">@cine.Direccion</td>
+                            <td class="col-md-2">@cine.Zona.Nombre</td>
+                            <td class="col-md-2">@cine.Ventas</td>
+                            <td class="col-md-2">
+                                <div class="col-md-3">
+                                    <a class="btn btn-danger" href="@Url.Action("Delete","Cine")">Delete</a>
+                                    <br />
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+
+            </table>
+
+
+        </div>
+    </div>
+}
+else
+{
+    <h2>No hay registros de cines</h2>
+}
