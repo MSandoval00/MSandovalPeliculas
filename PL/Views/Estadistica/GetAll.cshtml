@@ -1,0 +1,57 @@
+﻿@model ML.Cine
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container">
+    <div class="row">
+        <h2>Estadisticas de cines</h2>
+
+    </div>
+</div>
+<br />
+<hr />
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Total de Ventas por zona</h2>
+            <canvas id="grafica"></canvas>
+        </div>
+    </div>
+</div>
+@*@if (Model.Cines.Count > 0)
+    {
+
+    }*@
+@*else
+    {
+
+    <h2>No hay registros de cines</h2>
+    }*@
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+@section Scripts{
+<script type="text/javascript">
+       const labels = ['Norte', 'Sur', 'Este', 'Oeste']
+const colors = ['rgb(69,177,2)', 'rgb(99,201,122)', 'rgb(203,82,82)', 'rgb(229,224,88)'];
+ 
+const graph = document.querySelector("#grafica");
+ 
+const data = {
+    labels: @Html.LabelFor(model=> Model.Zona.IdZona),
+    datasets: [{
+        data: [1, 2, 3, 4],
+        backgroundColor: colors
+    }]
+};
+ 
+const config = {
+    type: 'pie',
+    data: data,
+};
+ 
+new Chart(graph, config);
+
+</script>
+}

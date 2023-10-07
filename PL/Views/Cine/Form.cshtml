@@ -23,7 +23,7 @@
 </script>
 
 <div class="container">
-    @using (Html.BeginForm("Form", "Movie", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("Form", "Cine", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         <div class="row">
 
@@ -46,9 +46,10 @@
         <div class="row">
             <div class="col-md-8">
                 @Html.LabelFor(model=>Model.Direccion)
-                <fieldset disabled>
-                    @Html.TextBoxFor(model=>Model.Direccion, new {@class="form-control" , @id="txtDireccion"})
-                </fieldset>
+                @*<fieldset disabled>*@
+                    @Html.TextBoxFor(model=>Model.Direccion, new {@class="form-control" , @id="txtdireccion", @readonly="readonly"})
+                    @*@Html.HiddenFor(model=>Model.Direccion)*@
+                @*</fieldset>*@
             </div>
             <div class="col-md-3">
                 <input type="submit" class="btn btn-success" value="Guardar">
@@ -67,7 +68,9 @@
 <script type="text/javascript">
           // Initialize and add the map
       let map;
-      let marker
+      let marker;
+      
+
 
       async function initMap() {
         // The location of Uluru
@@ -95,7 +98,6 @@
 
         infoWindow.open(map)
 
-        
 
         //Obtener dirección
 
@@ -113,7 +115,7 @@
             }, function (results, status){
                 if(status==google.maps.GeocoderStatus.OK){
                     if(results[0]){
-                        $("#txtDireccion").val(results[0].formatted_address);
+                        $("#txtdireccion").val(results[0].formatted_address);
 
                     }
                 }
@@ -126,4 +128,73 @@
 
       initMap();
 </script>
+<script>
+        window.addEventListener("load", function () {
+            var direccion = $("#txtdireccion").val();
+            if (direccion !== "") {
+                localizar("map", direccion);
+            }
+        });
+
+        function localizar(elemento, direccion) {
+
+            var geocoder = new google.maps.Geocoder();
+            var marker;
+            var map = new google.maps.Map(document.getElementById(elemento), {
+                zoom: 16,
+                scrollwheel: true,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            google.maps.event.addListener(map, 'click', function (event) {
+                // Eliminar el marcador anterior, si existe
+                if (marker) {
+                    marker.setMap(null);
+                }
+
+                // Colocar un nuevo marcador en la posición clicada
+                marker = new google.maps.Marker({
+                    position: event.latLng,
+                    map: map,
+                });
+
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({
+                    'latLng': event.latLng
+                }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK) {
+                        if (results[0]) {
+                            $("#txtdireccion").val(results[0].formatted_address);
+                        }
+                    }
+                });
+            });
+            geocoder.geocode({ 'address': direccion }, function (results, status) {
+                if (status === 'OK') {
+                    var resultados = results[0].geometry.location,
+                        resultados_lat = resultados.lat(),
+                        resultados_long = resultados.lng();
+
+                    map.setCenter(results[0].geometry.location);
+                    if (marker) {
+                        marker.setPosition(results[0].geometry.location);
+                    } else {
+                        marker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location
+                        });
+                    }
+                } else {
+                    var mensajeError = "";
+                    if (status === "ZERO_RESULTS") {
+                        mensajeError = "No hubo resultados para la dirección ingresada.";
+                    } else if (status === "OVER_QUERY_LIMIT" || status === "REQUEST_DENIED" || status === "UNKNOWN_ERROR") {
+                        mensajeError = "Error general del mapa.";
+                    } else if (status === "INVALID_REQUEST") {
+                        mensajeError = "Error de la web. No hay dirección encontrada.";
+                    }
+                    alert(mensajeError);
+                }
+            });
+        }
+    </script>
 }

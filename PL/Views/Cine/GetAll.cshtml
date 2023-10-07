@@ -9,12 +9,12 @@
         <h2>Cines</h2>
         <div class="col-md-3">
             <a class="btn btn-success" href="@Url.Action("Form","Cine")">Agregar</a>
-            <br />
         </div>
-        <hr />
 
     </div>
 </div>
+<br />
+<hr />
 @if (Model.Cines.Count > 0)
 {
     <div class="container">
@@ -40,10 +40,17 @@
                             <td class="col-md-2">@cine.Zona.Nombre</td>
                             <td class="col-md-2">@cine.Ventas</td>
                             <td class="col-md-2">
-                                <div class="col-md-3">
-                                    <a class="btn btn-danger" href="@Url.Action("Delete","Cine")">Delete</a>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <a class="btn btn-danger" href="@Url.Action("Delete","Cine",new {IdCine=cine.IdCine})">Delete</a>
+                                    </div>
                                     <br />
+                                    <br />
+                                    <div class="col-md-3">
+                                        <a class="btn btn-warning" href="@Url.Action("Form","Cine",new {IdCine=cine.IdCine})">Actualizar</a>
+                                    </div>
                                 </div>
+
                             </td>
                         </tr>
                     </tbody>

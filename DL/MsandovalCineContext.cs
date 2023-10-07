@@ -32,7 +32,7 @@ public partial class MsandovalCineContext : DbContext
             entity.ToTable("Cine");
 
             entity.Property(e => e.Direccion)
-                .HasMaxLength(50)
+                .HasMaxLength(500)
                 .IsUnicode(false);
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
