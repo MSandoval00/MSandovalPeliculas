@@ -4,7 +4,20 @@
 *@
 @{
 }
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+<style>
+    #map {
+        height: 400px;
+    }
+</style>
 
+<script>
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      key: "AIzaSyCSKBDdPPlfca_zTwyxKiicRQn1qfgRjLw",
+      // Add other bootstrap parameters as needed, using camel case.
+      // Use the 'v' parameter to indicate the version to load (alpha, beta, weekly, etc.)
+    });
+</script>
 <div class="container">
     <div class="row">
         <h2>Estadisticas de cines</h2>
@@ -13,45 +26,132 @@
 </div>
 <br />
 <hr />
-<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Total de Ventas por zona</h2>
-            <canvas id="grafica"></canvas>
+@if (Model.Cines.Count > 0)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+                <h2>Total de Ventas por zona</h2>
+                <canvas id="grafica"></canvas>
+                @using (Html.BeginForm("GetAll", "CineController", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    decimal norte = 0;
+                    decimal sur = 0;
+                    decimal este = 0;
+                    decimal oeste = 0;
+                    decimal total=0;
+
+
+                    @foreach (ML.Cine cine in Model.Cines)
+                    {
+                        @if (cine.Zona.IdZona == 1)
+                        {
+                            norte += cine.Ventas;
+                        }
+                        else if (cine.Zona.IdZona == 2)
+                        {
+                            sur += cine.Ventas;
+                        }
+                        else if (cine.Zona.IdZona == 3)
+                        {
+                            oeste += cine.Ventas;
+                        }
+                        else
+                        {
+                            este += cine.Ventas;
+                        }
+                         total = norte + sur + este + oeste;
+                    }
+                    norte = norte / 100;
+                    sur = sur / 100;
+                    este = este / 100;
+                    oeste = oeste / 100;
+
+                    <p>Norte: @norte%</p>
+                    <p>Sur: @sur</p>
+                    <p>Este: @este</p>
+                    <p>Oeste: @oeste</p>
+                    <p>Total: @total</p>
+                   
+                    <text>
+                        <script type="text/javascript">
+                        
+                                   const labels = ['Norte', 'Sur', 'Este', 'Oeste'];
+                            const colors = ['rgb(228,126,17)', 'rgb(49,228,17)', 'rgb(17,228,170)', 'rgb(55,17,288)'];
+
+                            const graph = document.querySelector("#grafica");
+
+                            const data = {
+                                labels: labels,
+                                datasets: [{
+                                    data: [@norte, @sur, @este, @oeste], 
+                                    backgroundColor: colors
+                                }]
+                            };
+
+                            const config = {
+                                type: 'pie',
+                                data: data,
+                            };
+
+                            new Chart(graph, config);
+
+                        </script>
+                    </text>
+
+                }
+            </div>
+            <br />
+            <div class="col-md-5">
+                <h2>Puntos de Ventas</h2>
+                <div id="map"></div>
+            </div>
         </div>
     </div>
-</div>
-@*@if (Model.Cines.Count > 0)
-    {
 
-    }*@
-@*else
-    {
+}
+else
+{
 
     <h2>No hay registros de cines</h2>
-    }*@
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+}
+
+
 @section Scripts{
+
 <script type="text/javascript">
-       const labels = ['Norte', 'Sur', 'Este', 'Oeste']
-const colors = ['rgb(69,177,2)', 'rgb(99,201,122)', 'rgb(203,82,82)', 'rgb(229,224,88)'];
- 
-const graph = document.querySelector("#grafica");
- 
-const data = {
-    labels: @Html.LabelFor(model=> Model.Zona.IdZona),
-    datasets: [{
-        data: [1, 2, 3, 4],
-        backgroundColor: colors
-    }]
-};
- 
-const config = {
-    type: 'pie',
-    data: data,
-};
- 
-new Chart(graph, config);
+
+        async function initMap() {
+          // The location of Uluru
+          const position = {  lat:19.4303622, lng:-99.1616508  };
+          // Request needed libraries.
+          const { Map } = await google.maps.importLibrary("maps");
+
+          // The map, centered at Uluru
+          map = new Map(document.getElementById("map"), {
+            zoom: 15,
+            center: position,
+            mapId: "DEMO_MAP_ID",
+          });
+
+           //Obtener dirección
+
+    google.maps.event.addListener(map ,'click', function(event){
+
+        var geocoder=new google.maps.Geocoder();
+        geocoder.geocode({
+            'latLng':event.latLng
+        }, function (results, status){
+            if(status==google.maps.GeocoderStatus.OK){
+
+            }
+
+        });
+    });
+
+        }
+    initMap();
 
 </script>
+
 }
