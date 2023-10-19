@@ -17,6 +17,8 @@ public partial class MsandovalCineContext : DbContext
 
     public virtual DbSet<Cine> Cines { get; set; }
 
+    public virtual DbSet<Dulcerium> Dulceria { get; set; }
+
     public virtual DbSet<Zona> Zonas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -42,6 +44,16 @@ public partial class MsandovalCineContext : DbContext
             entity.HasOne(d => d.IdZonaNavigation).WithMany(p => p.Cines)
                 .HasForeignKey(d => d.IdZona)
                 .HasConstraintName("FK__Cine__IdZona__1A14E395");
+        });
+
+        modelBuilder.Entity<Dulcerium>(entity =>
+        {
+            entity.HasKey(e => e.IdDulceria).HasName("PK__Dulceria__C4752206EFD31989");
+
+            entity.Property(e => e.Imagen).IsUnicode(false);
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<Zona>(entity =>

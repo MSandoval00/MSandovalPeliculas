@@ -1,0 +1,84 @@
+﻿@model ML.Venta
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+<div class="container">
+    <div class="row">
+        <h2>Tu carrito</h2>
+    </div>
+</div>
+<hr />
+<div class="container">
+    <div class="row">
+        @if (Model.Carrito == null || Model.Carrito.Count == 0)
+        {
+            <div class="alert alert-warning" role="alert">
+                Aun no tienes dulces agregados
+            </div>
+        }
+        else
+        {
+            <div class="col-md-12 text-center">
+                <div class="card-price">
+                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-solid fa-bag-shopping"></i> Comprar</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-solid fa-eraser"></i> Limpiar</button>
+                    <a href="@Url.Action("GetAll","Dulceria")" class="btn btn-danger"> <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i> Regresar</a>
+                </div>
+
+            </div>
+            <br />
+            <table class="table table-hover table-responsive table-dark">
+                <thead>
+                    <tr>
+
+                        <td class="text-center">Imagen</td>
+                        <td class="text-center">Nombre</td>
+                        <td class="text-center">Precio Unidad</td>
+                        <td class="text-center">Subtotal</td>
+                        <td class="text-center">Cantidad</td>
+                        <td class="text-center">Agregar</td>
+                        <td class="text-center">Eliminar</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ML.Dulceria dulceria in Model.Carrito)
+                    {
+                        <tr class="text-center">
+                            @if (dulceria.Imagen != null)
+                            {
+
+                                <td><img id="Img" src="data:image/*;base64,@dulceria.Imagen" style="width: 50px; height:50px;"></td>
+                            }
+                            else
+                            {
+                                <td><img id="Img" src="https://cdn-icons-png.flaticon.com/512/7032/7032300.png" style="width: 50px; height:50px;"></td>
+                            }
+                            <td>@dulceria.Nombre</td>
+                            <td>@dulceria.Precio</td>
+                            <td>
+                                @foreach (ML.Dulceria total in Model.Carrito) 
+                                {
+                                    @if(total.Nombre!=null){
+                                        @(dulceria.precioTotal +=dulceria.Precio)
+                                    }
+                                }
+                                @*@(dulceria.Precio * dulceria.Cantidad)*@
+                            </td>
+                            <td>@dulceria.Cantidad</td>                           
+                            
+                            <td><button class="btn btn-success"><i class="fa-solid fa-square-plus"></i></button></td>
+                            <td><button class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button></td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <label>Total: $ @Model.Total</label>
+        }
+    </div>
+</div>

@@ -4,6 +4,12 @@
 *@
 @{
 }
+<!-- Load c3.css -->
+<link href="/path/to/c3.css" rel="stylesheet">
+
+<!-- Load d3.js and c3.js -->
+<script src="/path/to/d3.v5.min.js" charset="utf-8"></script>
+<script src="/path/to/c3.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
 <style>
     #map {
@@ -39,7 +45,7 @@
                     decimal sur = 0;
                     decimal este = 0;
                     decimal oeste = 0;
-                    decimal total=0;
+                    decimal total = 0;
 
 
                     @foreach (ML.Cine cine in Model.Cines)
@@ -60,23 +66,24 @@
                         {
                             este += cine.Ventas;
                         }
-                         total = norte + sur + este + oeste;
+                        total = norte + sur + este + oeste;
                     }
                     norte = norte / 100;
                     sur = sur / 100;
                     este = este / 100;
                     oeste = oeste / 100;
 
-                    <p>Norte: @norte%</p>
-                    <p>Sur: @sur</p>
-                    <p>Este: @este</p>
-                    <p>Oeste: @oeste</p>
-                    <p>Total: @total</p>
-                   
+                    @*<p>Norte: @norte%</p>
+                        <p>Sur: @sur</p>
+                        <p>Este: @este</p>
+                        <p>Oeste: @oeste</p>
+                        <p>Total: @total</p>*@
+
                     <text>
                         <script type="text/javascript">
-                        
-                                   const labels = ['Norte', 'Sur', 'Este', 'Oeste'];
+
+                                   const labels = ['Norte%', 'Sur%', 'Este%', 'Oeste%'];
+
                             const colors = ['rgb(228,126,17)', 'rgb(49,228,17)', 'rgb(17,228,170)', 'rgb(55,17,288)'];
 
                             const graph = document.querySelector("#grafica");
@@ -84,9 +91,9 @@
                             const data = {
                                 labels: labels,
                                 datasets: [{
-                                    data: [@norte, @sur, @este, @oeste], 
+                                    data: [@norte, @sur, @este, @oeste],
                                     backgroundColor: colors
-                                }]
+                                }],
                             };
 
                             const config = {
@@ -107,6 +114,11 @@
                 <div id="map"></div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="chart"></div>
+            </div>
+        </div>
     </div>
 
 }
@@ -120,37 +132,58 @@ else
 @section Scripts{
 
 <script type="text/javascript">
-
+       let map;
         async function initMap() {
           // The location of Uluru
           const position = {  lat:19.4303622, lng:-99.1616508  };
           // Request needed libraries.
           const { Map } = await google.maps.importLibrary("maps");
+            const { AdvancedMarkerView } = await google.maps.importLibrary("marker");
 
           // The map, centered at Uluru
           map = new Map(document.getElementById("map"), {
-            zoom: 15,
+            zoom: 12,
             center: position,
             mapId: "DEMO_MAP_ID",
-          });
-
+          });    
            //Obtener dirección
 
-    google.maps.event.addListener(map ,'click', function(event){
-
+        @foreach (ML.Cine cine in Model.Cines)
+        {
+        <text>
         var geocoder=new google.maps.Geocoder();
-        geocoder.geocode({
-            'latLng':event.latLng
-        }, function (results, status){
+        geocoder.geocode({'address':'@cine.Direccion'}, function (results, status){
             if(status==google.maps.GeocoderStatus.OK){
-
+                var direccion={ lat: results[0].geometry.location.lat(), lng:results[0].geometry.location.lng()};
+                        const contentString ="@cine.Direccion, @cine.Nombre, @cine.Ventas";
+                        
+                let infoWindow=new google.maps.InfoWindow({
+                       content: contentString,
+                       ariaLabel: "Uluru",
+                    });
+             let marker= new google.maps.Marker({
+                map: map,
+                position: direccion,
+                title: "Uluru (Ayers Rock)",
+            });
+            marker.addListener("click", () => {
+                    infoWindow.open({
+                      anchor: marker,
+                      map,
+                    });
+                  });
             }
-
         });
-    });
+        </text>
+        }
+
 
         }
     initMap();
+
+</script>
+<script type="text/javascript">
+
 
 </script>
 

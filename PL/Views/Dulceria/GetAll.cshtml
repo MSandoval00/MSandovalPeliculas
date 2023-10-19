@@ -1,0 +1,73 @@
+﻿@model ML.Dulceria
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<link href="~/css/cards-dulceria.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+
+ <div id="header">
+            <h1>Dulceria</h1>
+            <p>Escoge tu combo</p>
+        </div>
+    <hr />
+@if (Model.Dulcerias.Count>0)
+{
+    <div class="container">
+          @Html.HiddenFor(model => Model.Imagen)
+            @foreach (ML.Dulceria dulceria in Model.Dulcerias)
+        {
+            <div class="card">
+                <div class="card-image">
+                    @if (dulceria.Imagen==null || dulceria.Imagen=="")
+                    {
+                     <img src="https://cdn-icons-png.flaticon.com/512/7032/7032300.png">   
+                    }
+                    else{
+                        <img src="data:image/*;base64,@dulceria.Imagen">
+                    }
+                </div>
+                <div class="card-text">
+                    <p class="card-meal-type">@dulceria.Nombre</p>
+                    <h2 class="card-title">@dulceria.Nombre</h2>
+                    <p class="card-body">@dulceria.Nombre: $@dulceria.Precio</p>
+                </div>
+                 @* <div class="card-price"><a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-solid fa-cart-plus">Agregar</i></a></div>*@
+                  <div class="card-price"><a class="btn btn-warning" href="@Url.Action("AddCarrito","Dulceria", new {IdDulceria=dulceria.IdDulceria})"><i class="fa-solid fa-cart-plus">Agregar</i></a></div>
+            </div>
+                
+            }
+            
+
+        </div>
+    <br />
+
+    <!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Selecciona tu palomitas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+            <label>Palomitas</label>
+                <input type="text"/>
+                <label>Palomitas</label>
+                <input type="text"/><label>Palomitas</label>
+                
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+        <button type="button" class="btn btn-success"><i class="fa-solid fa-cart-plus"></i>Agregar al carrito</button>
+      </div>
+    </div>
+  </div>
+</div>
+}
+else
+{
+    <h2>No hay registros de dulces</h2>
+}
