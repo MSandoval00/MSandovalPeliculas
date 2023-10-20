@@ -19,6 +19,8 @@ public partial class MsandovalCineContext : DbContext
 
     public virtual DbSet<Dulcerium> Dulceria { get; set; }
 
+    public virtual DbSet<Usuario> Usuarios { get; set; }
+
     public virtual DbSet<Zona> Zonas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -53,6 +55,26 @@ public partial class MsandovalCineContext : DbContext
             entity.Property(e => e.Imagen).IsUnicode(false);
             entity.Property(e => e.Nombre)
                 .HasMaxLength(50)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.HasKey(e => e.IdUsuario).HasName("PK__Usuario__5B65BF9780EC86D8");
+
+            entity.ToTable("Usuario");
+
+            entity.HasIndex(e => e.UserName, "UQ__Usuario__C9F2845605B7E5CA").IsUnique();
+
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Nombre)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Password).HasMaxLength(20);
+            entity.Property(e => e.UserName)
+                .HasMaxLength(100)
                 .IsUnicode(false);
         });
 

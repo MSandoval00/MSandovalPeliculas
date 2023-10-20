@@ -39,6 +39,9 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Estadistica" asp-action="GetAll">Estadistica</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Usuario" asp-action="Login">Login</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Dulceria" asp-action="GetAll">Dulceria</a>
                         </li>
                          @if (Context.Session.GetString("Carrito") == null)

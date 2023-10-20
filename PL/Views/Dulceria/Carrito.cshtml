@@ -26,7 +26,7 @@
             <div class="col-md-12 text-center">
                 <div class="card-price">
                     <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-solid fa-bag-shopping"></i> Comprar</button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-solid fa-eraser"></i> Limpiar</button>
+                    <button type="button" class="btn btn-primary" onclick="limpiar();"><i class="fa-solid fa-eraser"></i> Limpiar</button>
                     <a href="@Url.Action("GetAll","Dulceria")" class="btn btn-danger"> <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i> Regresar</a>
                 </div>
 
@@ -48,7 +48,7 @@
                 <tbody>
                     @foreach (ML.Dulceria dulceria in Model.Carrito)
                     {
-                        <tr class="text-center">
+                        <tr id="fila-@dulceria.IdDulceria" class="text-center" >
                             @if (dulceria.Imagen != null)
                             {
 
@@ -59,26 +59,71 @@
                                 <td><img id="Img" src="https://cdn-icons-png.flaticon.com/512/7032/7032300.png" style="width: 50px; height:50px;"></td>
                             }
                             <td>@dulceria.Nombre</td>
-                            <td>@dulceria.Precio</td>
+                            <td class="precio">@dulceria.Precio</td>
                             <td>
-                                @foreach (ML.Dulceria total in Model.Carrito) 
+                                @*@foreach (ML.Dulceria total in Model.Carrito) 
                                 {
                                     @if(total.Nombre!=null){
                                         @(dulceria.precioTotal +=dulceria.Precio)
                                     }
-                                }
-                                @*@(dulceria.Precio * dulceria.Cantidad)*@
+                                }*@
+                                @(dulceria.Precio * dulceria.Cantidad)
                             </td>
                             <td>@dulceria.Cantidad</td>                           
                             
                             <td><button class="btn btn-success"><i class="fa-solid fa-square-plus"></i></button></td>
-                            <td><button class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button></td>
+                            <td><button class="btn btn-danger" onclick="eliminarFila(@dulceria.IdDulceria)"><i class="fa-solid fa-trash-can"></i></button></td>
 
                         </tr>
                     }
                 </tbody>
             </table>
-            <label>Total: $ @Model.Total</label>
+           <label>Total: $<span id="total"></span></label>
         }
     </div>
 </div>
+ <script src="~/lib/jquery/dist/jquery.min.js"></script>
+@section Scripts{
+
+<script type="text/javascript">
+    document.addEventListener("DOMContentLoaded", function() {
+    calcularTotal();
+    });
+     function eliminarFila(id) {
+        var fila = document.getElementById("fila-" + id);
+        fila.remove();
+        calcularTotal();
+    }
+function limpiar(){
+    //$('#dulces').remove();
+    var tabla=document.querySelector(".table tbody");
+    tabla.innerHTML="";
+    calcularTotal();
+}
+function calcularTotal() {
+    var filas = document.querySelectorAll(".table tbody tr");
+    var total = 0;
+
+    filas.forEach(function(fila) {
+        var precio = parseFloat(fila.querySelector(".precio").textContent);
+        var cantidad = parseInt(fila.querySelector("td:nth-child(5)").textContent);
+        total += precio * cantidad;
+    });
+
+    document.getElementById("total").textContent = total.toFixed(2);
+}
+
+//function recalcularTotal() {
+//        var filas = document.querySelectorAll(".table tbody tr");
+//        var total = 0;
+
+//        filas.forEach(function(fila) {
+//            var precio = parseFloat(fila.querySelector("td:nth-child(3)").textContent);
+//            var cantidad = parseInt(fila.querySelector("td:nth-child(5)").textContent);
+//            total += precio * cantidad;
+//        });
+
+//        document.getElementById("total").textContent = total.toFixed(2);
+//    }
+</script>
+}
