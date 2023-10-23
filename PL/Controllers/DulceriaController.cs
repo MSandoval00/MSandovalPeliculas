@@ -113,6 +113,30 @@ namespace PL.Controllers
                 return View(carrito);
             }
         }
+        public ActionResult GenerarPdf()
+        {
+            string _headerUrl = Url.Action("HeaderPDF", "Dulceria", null, "https");
+            string _footerUrl = Url.Action("FooterPDF", "Dulceria", null, "https");
+            return new ViewAsPdf("Index", appDbContext.Customers.ToList())
+            {
+                CustomSwitches = "--header-html " + _headerUrl + " --header-spacing 0 " +
+                                 "--footer-html " + _footerUrl + " --footer-spacing 0"
+                ,
+                PageSize = Rotativa.Options.Size.A4
+                //,FileName = "CustomersLista.pdf" // SI QUEREMOS QUE EL ARCHIVO SE DESCARGUE DIRECTAMENTE
+                ,
+                PageMargins = new Rotativa.Options.Margins(40, 10, 10, 10)
+            }
+        }
+        public ActionResult HeaderPDF()
+        {
+            return View("HeaderPDF");
+        }
+
+        public ActionResult FooterPDF()
+        {
+            return View("FooterPDF");
+        }
 
     }
 }

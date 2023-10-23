@@ -22,9 +22,10 @@
 #chk {
     display: none;
 }
-a{
-    text-align:center;
-    color:#fff;
+
+a {
+    text-align: center;
+    color: #fff;
 }
 
 .signup {
@@ -103,7 +104,8 @@ button {
 #chk:checked ~ .signup label {
     transform: scale(.6);
 }
-h1{
-    color:#fff;
-    text-align:center;
+
+h2 {
+    color: #fff;
+    text-align: center;
 }

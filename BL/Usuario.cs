@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,8 +51,8 @@ namespace BL
             {
                 using (DL.MsandovalCineContext context=new DL.MsandovalCineContext())
                 {
-                    var query = context.Database.ExecuteSqlRaw($"UsuarioAdd '{usuario.UserName}','{usuario.Email}','{usuario.Nombre}',{usuario.Password}");
-                    if (query>1)
+                    var query = context.Database.ExecuteSqlRaw($"UsuarioAdd '{usuario.UserName}','{usuario.Email}','{usuario.Nombre}', @Password",new SqlParameter("@Password",usuario.Password));
+                    if (query>0)
                     {
                         result.Correct = true;
                     }
@@ -71,6 +72,37 @@ namespace BL
                 result.Ex = ex;
             }
             return result;
+        }
+        public static ML.Result Update(ML.Usuario usuario)
+        {
+            ML.Result result = new ML.Result();
+            try
+            {
+                using (DL.MsandovalCineContext context=new DL.MsandovalCineContext())
+                {
+                    var query = context.Database.ExecuteSqlRaw($"UsuarioUpdatePassword '{usuario.Email}', @Password", new SqlParameter("@Password", usuario.Password));
+                    if (query > 0)
+                    {
+                        result.Correct = true;
+                    }
+                    else
+                    {
+                        result.Correct = false;
+                        result.ErrorMessage = "Error no se actualizo el cine";
+                    }
+                    result.Correct = true;
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result.Correct = false;
+                result.ErrorMessage = ex.Message;
+                result.Ex = ex;
+            }
+            return result ;
+
         }
     }
 }

@@ -12,6 +12,15 @@
         <h2>Tu carrito</h2>
     </div>
 </div>
+<div class="col-md-12 text-center">
+    <div class="card-price">
+        <button type="button" class="btn btn-success" onclick="showModal();"><i class="fa-solid fa-bag-shopping"></i> Comprar</button>
+        <button type="button" class="btn btn-primary" onclick="limpiar();"><i class="fa-solid fa-eraser"></i> Limpiar</button>
+        <a href="@Url.Action("GetAll","Dulceria")" class="btn btn-danger"> <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i> Regresar</a>
+    </div>
+
+</div>
+<br />
 <hr />
 <div class="container">
     <div class="row">
@@ -23,15 +32,6 @@
         }
         else
         {
-            <div class="col-md-12 text-center">
-                <div class="card-price">
-                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="fa-solid fa-bag-shopping"></i> Comprar</button>
-                    <button type="button" class="btn btn-primary" onclick="limpiar();"><i class="fa-solid fa-eraser"></i> Limpiar</button>
-                    <a href="@Url.Action("GetAll","Dulceria")" class="btn btn-danger"> <i class="fa-solid fa-right-from-bracket fa-rotate-180"></i> Regresar</a>
-                </div>
-
-            </div>
-            <br />
             <table class="table table-hover table-responsive table-dark">
                 <thead>
                     <tr>
@@ -48,7 +48,7 @@
                 <tbody>
                     @foreach (ML.Dulceria dulceria in Model.Carrito)
                     {
-                        <tr id="fila-@dulceria.IdDulceria" class="text-center" >
+                        <tr id="fila-@dulceria.IdDulceria" class="text-center">
                             @if (dulceria.Imagen != null)
                             {
 
@@ -61,16 +61,16 @@
                             <td>@dulceria.Nombre</td>
                             <td class="precio">@dulceria.Precio</td>
                             <td>
-                                @*@foreach (ML.Dulceria total in Model.Carrito) 
-                                {
+                                @*@foreach (ML.Dulceria total in Model.Carrito)
+                                    {
                                     @if(total.Nombre!=null){
-                                        @(dulceria.precioTotal +=dulceria.Precio)
+                                    @(dulceria.precioTotal +=dulceria.Precio)
                                     }
-                                }*@
+                                    }*@
                                 @(dulceria.Precio * dulceria.Cantidad)
                             </td>
-                            <td>@dulceria.Cantidad</td>                           
-                            
+                            <td>@dulceria.Cantidad</td>
+
                             <td><button class="btn btn-success"><i class="fa-solid fa-square-plus"></i></button></td>
                             <td><button class="btn btn-danger" onclick="eliminarFila(@dulceria.IdDulceria)"><i class="fa-solid fa-trash-can"></i></button></td>
 
@@ -78,52 +78,116 @@
                     }
                 </tbody>
             </table>
-           <label>Total: $<span id="total"></span></label>
+            <label>Total: $<span id="total"></span></label>
         }
     </div>
 </div>
- <script src="~/lib/jquery/dist/jquery.min.js"></script>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Llena los campos para completar tu compra</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-credit-card"></i></span>
+                <input type="text" class="form-control" placeholder="Card" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-calendar-plus"></i></span>
+                <input type="text" class="form-control" placeholder="MM/YY" aria-label="Username" aria-describedby="basic-addon1"> <br /><br />
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-calendar-plus"></i></span>
+                <input type="text" class="form-control" placeholder="CVV" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+                <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon1"><i class="bi bi-credit-card"></i></span>
+                <input type="text" class="form-control" placeholder="Dirección" aria-label="Username" aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>*@
+                <button type="button" class="btn btn-danger" onclick="hiddenModal();">Cerrar</button>
+                <button type="button" class="btn btn-success" onclick="BuyModal();"><i class="fa-solid fa-cart-plus"></i>Agregar al carrito</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Compra-->
+<div class="modal fade" id="BuyCompra" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tu pedido esta en camino</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <div class="input-group mb-3">
+                <img style=" border-radius:30px; margin-left: auto; margin-right: auto;" src="https://media1.giphy.com/media/npMzRCRHNOffIvGy0F/200w.gif?cid=82a1493bnsd7wfwvknl0e89jptle548qkxrj3udsn2p0hvjz&ep=v1_gifs_related&rid=200w.gif&ct=g" width="350px" height="350px"/>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>*@
+                <button type="button" class="btn btn-danger" onclick="hiddenBuyModal();">Cerrar</button>
+                <button type="button" class="btn btn-warning"><i class="bi bi-filetype-pdf"></i> Generar PDF</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 @section Scripts{
 
 <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function() {
-    calcularTotal();
-    });
-     function eliminarFila(id) {
-        var fila = document.getElementById("fila-" + id);
-        fila.remove();
+
+        document.addEventListener("DOMContentLoaded", function() {
+        calcularTotal();
+        });
+         function eliminarFila(id) {
+            var fila = document.getElementById("fila-" + id);
+            fila.remove();
+            calcularTotal();
+        }
+    function limpiar(){
+        //$('#dulces').remove();
+
+        var tabla=document.querySelector(".table tbody");
+        tabla.innerHTML="";
         calcularTotal();
     }
-function limpiar(){
-    //$('#dulces').remove();
-    var tabla=document.querySelector(".table tbody");
-    tabla.innerHTML="";
-    calcularTotal();
-}
-function calcularTotal() {
-    var filas = document.querySelectorAll(".table tbody tr");
-    var total = 0;
+    function calcularTotal() {
+        var filas = document.querySelectorAll(".table tbody tr");
+        var total = 0;
 
-    filas.forEach(function(fila) {
-        var precio = parseFloat(fila.querySelector(".precio").textContent);
-        var cantidad = parseInt(fila.querySelector("td:nth-child(5)").textContent);
-        total += precio * cantidad;
-    });
+        filas.forEach(function(fila) {
+            var precio = parseFloat(fila.querySelector(".precio").textContent);
+            var cantidad = parseInt(fila.querySelector("td:nth-child(5)").textContent);
+            total += precio * cantidad;
+        });
 
-    document.getElementById("total").textContent = total.toFixed(2);
-}
-
-//function recalcularTotal() {
-//        var filas = document.querySelectorAll(".table tbody tr");
-//        var total = 0;
-
-//        filas.forEach(function(fila) {
-//            var precio = parseFloat(fila.querySelector("td:nth-child(3)").textContent);
-//            var cantidad = parseInt(fila.querySelector("td:nth-child(5)").textContent);
-//            total += precio * cantidad;
-//        });
-
-//        document.getElementById("total").textContent = total.toFixed(2);
-//    }
+        document.getElementById("total").textContent = total.toFixed(2);
+    }
+    function showModal(){
+        $('#staticBackdrop').modal('show');
+    }
+    function hiddenModal(){
+        $('#staticBackdrop').modal('hide');
+    }
+    function BuyModal(){
+        $('#staticBackdrop').modal('hide');
+        $('#BuyCompra').modal('show');
+    }
+     function hiddenBuyModal(){
+        $('#BuyCompra').modal('hide');
+    }
+    function GenerarPDF(){
+        $.ajax({
+            url:'/generatePDF',
+            success:function(d){
+                document.location=d;
+            }
+        })
+    }
 </script>
 }

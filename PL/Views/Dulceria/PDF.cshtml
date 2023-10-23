@@ -1,0 +1,88 @@
+﻿@model ML.Venta
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PDF</title>
+    <style>
+        /* SOLUCIONA PROBLEMA DE SOLAPAMIENTO EN TABLAS <table /> */
+        thead {
+            display: table-header-group
+        }
+
+        tfoot {
+            display: table-row-group
+        }
+
+        tr {
+            page-break-inside: avoid
+        }
+    </style>
+</head>
+<body style=" background: #b6ff00; padding: 0px; margin: 0px;">
+    <div class="container">
+        @if (Model.Carrito == null || Model.Carrito.Count == 0)
+        {
+            <div class="alert alert-warning" role="alert">
+                Aun no tienes dulces agregados
+            </div>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center">Imagen</th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Precio Unidad</th>
+                        <th class="text-center">Subtotal</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-center">Agregar</th>
+                        <th class="text-center">Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @*@{
+                        var _count = 0;
+                        }*@
+                    @foreach (ML.Dulceria dulceria in Model.Carrito)
+                    {
+                        <tr id="fila-@dulceria.IdDulceria" class="text-center">
+                            @if (dulceria.Imagen != null)
+                            {
+
+                                <td><img id="Img" src="data:image/*;base64,@dulceria.Imagen" style="width: 50px; height:50px;"></td>
+                            }
+                            else
+                            {
+                                <td><img id="Img" src="https://cdn-icons-png.flaticon.com/512/7032/7032300.png" style="width: 50px; height:50px;"></td>
+                            }
+                            <td>@dulceria.Nombre</td>
+                            <td class="precio">@dulceria.Precio</td>
+                            <td>
+                                @*@foreach (ML.Dulceria total in Model.Carrito)
+                                    {
+                                    @if(total.Nombre!=null){
+                                    @(dulceria.precioTotal +=dulceria.Precio)
+                                    }
+                                    }*@
+                                @(dulceria.Precio * dulceria.Cantidad)
+                            </td>
+                            <td>@dulceria.Cantidad</td>
+
+                            <td><button class="btn btn-success"><i class="fa-solid fa-square-plus"></i></button></td>
+                            <td><button class="btn btn-danger" onclick="eliminarFila(@dulceria.IdDulceria)"><i class="fa-solid fa-trash-can"></i></button></td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <label>Total: $<span id="total"></span></label>
+        }
+    </div>
+</body>
+</html>

@@ -11,34 +11,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
 </head>
 <body>
-    @using (Html.BeginForm("Login", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                {
+    
         <div class="main">
             <input type="checkbox" id="chk" aria-hidden="true">
             
             <div class="signup">
-
+                 @using (Html.BeginForm("Login", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
                 <form>
-                    <h2>Registrar Usuario</h2>
-                   <input type="text" name="username-S" placeholder="UserName" required="">
+                    <h1>Registrar Usuario</h1>
+                    @Html.HiddenFor(Model=>Model.IdUsuario)
+                     @Html.TextBoxFor(model => model.UserName, new { @class = "form-control", @type = "text", @name = "username-S", @placeholder = "Nombre de Usuario", @required="" })
+                     @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control", @type = "text", @name = "nombre-S", @placeholder = "Nombre Completo" ,@required=""})
+                     @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @type = "email", @name = "email-S", @placeholder = "Correo Electronico",@required="" })
+                     @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @type = "password", @name = "pswd-S", @placeholder = "Contraseña",@required="" })
+                 @*  <input type="text" name="username-S" placeholder="UserName" required="">
                     <input type="text" name="nombre-S" placeholder="Nombre" required="">
                     <input type="email" name="email-S" placeholder="Email" required="">
-                    <input type="password" name="pswd-S" placeholder="Password" required="">
+                    <input type="password" name="pswd-S" placeholder="Password" required="">*@
                     <button>Crear cuenta</button>
+                    
+                    <a class="btn btn-info" href="@Url.Action("CambiarPassword","Usuario")">Olvidastes tu contraseña?</a>
                 </form>
+                }
             </div>
             <div class="login">
-                
+                 @using (Html.BeginForm("Login", "Usuario", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
                 <form>
                     <label for="chk" aria-hidden="true">Login</label>
-                     @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @type = "email", @name = "email", @placeholder = "Email" })
-                    @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @type = "password", @name = "pswd", @placeholder = "Password" })
+                     @Html.TextBoxFor(model => model.Email, new { @class = "form-control", @type = "email", @name = "email", @placeholder = "Email", @required="" })
+                    @Html.TextBoxFor(model => model.Password, new { @class = "form-control", @type = "password", @name = "pswd", @placeholder = "Password", @required="" })
                     <button>Iniciar sesión</button>
                 </form>
-                
+                }
             </div>
-            
+        
         </div>
-        }
 </body>
 </html>
