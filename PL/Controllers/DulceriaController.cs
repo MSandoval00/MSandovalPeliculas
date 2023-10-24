@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Layout.Properties;
+using iText.IO.Image;
+using Microsoft.AspNetCore.Mvc;
+using iText.Kernel.Pdf;
 
 namespace PL.Controllers
 {
@@ -113,29 +119,65 @@ namespace PL.Controllers
                 return View(carrito);
             }
         }
-        public ActionResult GenerarPdf()
+        public ActionResult GeneratePDF()
         {
-            string _headerUrl = Url.Action("HeaderPDF", "Dulceria", null, "https");
-            string _footerUrl = Url.Action("FooterPDF", "Dulceria", null, "https");
-            return new ViewAsPdf("Index", appDbContext.Customers.ToList())
-            {
-                CustomSwitches = "--header-html " + _headerUrl + " --header-spacing 0 " +
-                                 "--footer-html " + _footerUrl + " --footer-spacing 0"
-                ,
-                PageSize = Rotativa.Options.Size.A4
-                //,FileName = "CustomersLista.pdf" // SI QUEREMOS QUE EL ARCHIVO SE DESCARGUE DIRECTAMENTE
-                ,
-                PageMargins = new Rotativa.Options.Margins(40, 10, 10, 10)
-            }
-        }
-        public ActionResult HeaderPDF()
-        {
-            return View("HeaderPDF");
-        }
+            ML.Venta carrito=new ML.Venta();
+            carrito.Carrito=new List<object>();
+            GetCarrito(carrito);
 
-        public ActionResult FooterPDF()
-        {
-            return View("FooterPDF");
+            //crea un archivo pdf en la ubicación temporal
+
+            string rutaPDF=Path.GetTempFileName()+".pdf";
+            using (PdfDocument pdfDocument = new PdfDocument(new PdfWriter(rutaPDF)))
+            {
+                using (Document document = new Document(pdfDocument))
+                {
+                    document.Add(new Paragraph("Resumen de Compra"));//Titulo del PDF
+
+                    // Crear la tabla para mostrar la lista de objetos
+                    Table table = new Table(5); // Mostrar las columnas
+                    table.SetWidth(UnitValue.CreatePercentValue(100)); // Ancho de la tabla al 100% del documento
+
+                    // Encabezados de las celdas para la tabla
+                    table.AddHeaderCell("Imagen");
+                    table.AddHeaderCell("Nombre");
+                    table.AddHeaderCell("Precio Unidad");
+                    table.AddHeaderCell("Subtotal");
+                    table.AddHeaderCell("Cantidad");
+
+
+                    foreach (ML.Dulceria dulceria in carrito.Carrito)
+                    {
+                        byte[] imageBytes = Convert.FromBase64String(dulceria.Imagen);
+                        ImageData data = ImageDataFactory.Create(imageBytes);
+                        Image image = new Image(data);
+                        table.AddCell(image.SetWidth(50).SetHeight(50));
+
+                        table.AddCell(dulceria.Nombre);
+                        table.AddCell(dulceria.Precio.ToString());
+                        table.AddCell((dulceria.Precio*dulceria.Cantidad).ToString());
+                        table.AddCell(dulceria.Cantidad.ToString());
+                        //dulceria.precioTotal+=dulceria.Precio*dulceria.Cantidad;
+                    }
+                    // Añadir la tabla al documento
+                    document.Add(table);
+                    //document.Add(new Paragraph("Total de compra:"));
+                }
+            }
+
+            // Leer el archivo PDF como un arreglo de bytes
+            byte[] fileBytes = System.IO.File.ReadAllBytes(rutaPDF);
+
+            // Eliminar el archivo temporal
+            System.IO.File.Delete(rutaPDF);
+            HttpContext.Session.Remove("Carrito");
+
+            // Descargar el archivo PDF
+            return new FileStreamResult(new MemoryStream(fileBytes), "application/pdf")
+            {
+                FileDownloadName = "ReporteProductos.pdf"
+            };
+
         }
 
     }

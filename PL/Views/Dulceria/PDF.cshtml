@@ -46,9 +46,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @*@{
-                        var _count = 0;
-                        }*@
                     @foreach (ML.Dulceria dulceria in Model.Carrito)
                     {
                         <tr id="fila-@dulceria.IdDulceria" class="text-center">
@@ -64,12 +61,6 @@
                             <td>@dulceria.Nombre</td>
                             <td class="precio">@dulceria.Precio</td>
                             <td>
-                                @*@foreach (ML.Dulceria total in Model.Carrito)
-                                    {
-                                    @if(total.Nombre!=null){
-                                    @(dulceria.precioTotal +=dulceria.Precio)
-                                    }
-                                    }*@
                                 @(dulceria.Precio * dulceria.Cantidad)
                             </td>
                             <td>@dulceria.Cantidad</td>
